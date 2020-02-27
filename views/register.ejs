@@ -1,0 +1,44 @@
+<%- include('header') %>
+<body>
+  <h1>Inscription</h1>
+  <form  method="POST" action="/users/register">
+  <table>
+      <tr>
+      <td>Email :</td>
+      <td><input type="email" name="mail" ></td>
+      </tr>
+      <tr>
+      <td>Mot de passe :</td>
+      <td><input type="password" name="mdp" ></td>
+      </tr>
+      <tr>
+      <td>Confirmer mot de passe :</td>
+      <td><input type="password" name="mdp2" ></td>
+      </tr>
+      <tr>
+      <td>Nom :</td>
+      <td><input type="text" name="lastname" ></td>
+      </tr>
+      <tr>
+      <td>Prénom :</td>
+      <td><input type="text" name="firstname" ></td>
+      </tr>
+      <tr>
+      <td>Date de Naissance :</td>
+      <td><input type="date" name="birth" ></td>
+      </tr>
+      <tr>
+      <td>Département :</td>
+      <td><select id="departmt" name="departmt">
+      <% for (dep of deps) {%>
+        <option value="<%= dep.idDep %>"> <%= dep.idDep %> </option>
+      <% } %>
+      </td>
+      </tr>
+      <tr>
+      <td colspan="2"><input type="submit" value="S'inscrire" ></td>
+      </tr>
+  </table>
+  </form>
+</body>
+  </html>
