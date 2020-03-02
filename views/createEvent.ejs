@@ -1,0 +1,36 @@
+<%- include('header') %>
+<body>
+  <h1>Créer un événement</h1>
+  <form  method="POST" action="/events/createEvent">
+  <table>
+      <tr>
+      <td>Type Evénement :</td>
+      <td><select id="type" name="type">
+      <% for (type of types) {%>
+        <option value="<%= type.idTypeE %>"> <%= type.LibelleTypeE %> </option>
+      <% } %>
+      </td>
+      </tr>
+      <tr>
+      <td>Nom :</td>
+      <td><input type="text" name="name"  ></td>
+      </tr>
+      <tr>name
+      <td>Date de l'événement :</td>
+      <td><input type="date" name="dateE" required ></td>
+      </tr>
+      <tr>
+      <td>Capacité :</td>
+      <td><input type="number" name="capacity" required ></td>
+      </tr>
+      <tr>
+      <td>Date de fin d'inscription :</td>
+      <td><input type="date" name="dateI" required ></td>
+      </tr>
+      <tr>
+      <td colspan="2"><input type="submit" value="Créer" ></td>
+      </tr>
+  </table>
+  </form>
+</body>
+  </html>
