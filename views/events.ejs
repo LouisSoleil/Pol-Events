@@ -1,0 +1,21 @@
+<%- include('header') %>
+<body>
+  <h1 class="h3 mb-3 font-weight-normal">Evénement disponible :</h1>
+  <div class="row">
+    <% for (event of events) {%>
+      <div class="col-sm-4">
+        <div class="card" style="width: 18rem;">
+          <img src="..." class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title"><%= event.libelleEvent %></h5>
+            <a href="/events/summaryEvent/<%= event.idEvent %>" class="btn btn-primary">Accéder</a>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    </div>
+</body>
+
+
+</html>

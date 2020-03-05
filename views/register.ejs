@@ -1,44 +1,32 @@
 <%- include('header') %>
-<body>
-  <h1>Inscription</h1>
-  <form  method="POST" action="/users/register">
-  <table>
-      <tr>
-      <td>Email :</td>
-      <td><input type="email" name="mail"  ></td>
-      </tr>
-      <tr>
-      <td>Mot de passe :</td>
-      <td><input type="password" name="mdp" required ></td>
-      </tr>
-      <tr>
-      <td>Confirmer mot de passe :</td>
-      <td><input type="password" name="mdp2" required ></td>
-      </tr>
-      <tr>
-      <td>Nom :</td>
-      <td><input type="text" name="lastname" required ></td>
-      </tr>
-      <tr>
-      <td>Prénom :</td>
-      <td><input type="text" name="firstname" required ></td>
-      </tr>
-      <tr>
-      <td>Date de Naissance :</td>
-      <td><input type="date" name="birth" required ></td>
-      </tr>
-      <tr>
-      <td>Département :</td>
-      <td><select id="departmt" name="departmt">
+  <form class="form-signin" method="POST", action="/users/register">
+      <h1 class="h3 mb-3 font-weight-normal">Inscription : </h1>
+      <label for="inputEmail" class="sr-only">Email</label>
+      <input type="email" id="inputEmail" class="form-control" placeholder="Adresse Mail" name = "mail" required autofocus>
+
+      <label for="inputPassword" class="sr-only">Mot de passe</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Mot de Passe" name ="mdp" required>
+
+      <label for="inputPassword2" class="sr-only">Confirmer mot de passe</label>
+      <input type="password" id="inputPassword2" class="form-control" placeholder="Confirmer Mot de Passe" name ="mdp2" required>
+
+      <label for="lastname" class="sr-only">Nom </label>
+      <input type="text" id="lastname" class="form-control" placeholder="Nom" name ="lastname" required>
+
+      <label for="firstname" class="sr-only">Prénom </label>
+      <input type="text" id="firstname" class="form-control" placeholder="Prénom" name ="firstname" required>
+
+      <label for="text" class="sr-only">Date de naissance </label>
+      <input type="date" id="birth" class="form-control" placeholder="Date de naissance" name ="birth" required>
+
+      <select class="custom-select" id="departmt" name="departmt">
+        <option value="" disabled selected> Département </option>
       <% for (dep of deps) {%>
         <option value="<%= dep.idDep %>"> <%= dep.idDep %> </option>
       <% } %>
-      </td>
-      </tr>
-      <tr>
-      <td colspan="2"><input type="submit" value="S'inscrire" ></td>
-      </tr>
-  </table>
+      </select>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">S'inscrire</button>
   </form>
+
 </body>
   </html>

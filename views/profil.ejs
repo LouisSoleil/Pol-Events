@@ -1,0 +1,43 @@
+<%- include('header') %>
+<body>
+  <h1>Bonjour <%= rows[0].prenom %>, voici ton profil : </h1>
+  <form action="/users/profil" method="POST">
+    <table>
+      <tr>
+      <td>Nom :</td>
+      <td><input type="text" name="lastname" value="<%= rows[0].nom %>" ></td>
+      </tr>
+      <tr>
+      <td>Prénom :</td>
+      <td><input type="text" name="firstname" value="<%= rows[0].prenom %>" ></td>
+      </tr>
+      <tr>
+      <td>Date de Naissance :</td>
+      <td><input type="date" name="birth" value="<%= rows[0].dateNaissance %>" ></td>
+      </tr>
+      <tr>
+      <td><h3>Modifier son mot de passe : </h3></td>
+      </tr>
+      <tr>
+      <td>Ancien Mot de passe : </td>
+      <td><input type="password" name="oldmdp" ></td>
+      </tr>
+      <tr>
+      <td>Nouveau mot de passe :</td>
+      <td><input type="password" name="newmdp" ></td>
+      </tr>
+      <tr>
+      <td>Confirmer nouveau mot de passe :</td>
+      <td><input type="password" name="newmdp2" ></td>
+      </tr>
+      <tr>
+      <td><input type="submit" value="Modifier" ></td>
+      <td><button type="button" name="retour"> Retour</button>
+      </tr>
+    </table>
+  </form>
+
+
+
+</body>
+</html>

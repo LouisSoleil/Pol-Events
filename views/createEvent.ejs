@@ -1,36 +1,35 @@
 <%- include('header') %>
 <body>
   <h1>Créer un événement</h1>
-  <form  method="POST" action="/events/createEvent">
-  <table>
-      <tr>
-      <td>Type Evénement :</td>
-      <td><select id="type" name="type">
+  <form class="form-signin" method="POST", action="/events/createEvent">
+      <h1 class="h3 mb-3 font-weight-normal">Créer un nouvel événement : </h1>
+
+      <select class="custom-select" id="type" name="type">
+        <option value="" disabled selected> Type de l'événement </option>
       <% for (type of types) {%>
         <option value="<%= type.idTypeE %>"> <%= type.LibelleTypeE %> </option>
       <% } %>
-      </td>
-      </tr>
-      <tr>
-      <td>Nom :</td>
-      <td><input type="text" name="name"  ></td>
-      </tr>
-      <tr>name
-      <td>Date de l'événement :</td>
-      <td><input type="date" name="dateE" required ></td>
-      </tr>
-      <tr>
-      <td>Capacité :</td>
-      <td><input type="number" name="capacity" required ></td>
-      </tr>
-      <tr>
-      <td>Date de fin d'inscription :</td>
-      <td><input type="date" name="dateI" required ></td>
-      </tr>
-      <tr>
-      <td colspan="2"><input type="submit" value="Créer" ></td>
-      </tr>
-  </table>
+      </select>
+
+      <label for="inputName" class="sr-only">Nom</label>
+      <input type="text" id="inputName" class="form-control" placeholder="Nom de l'événement" name = "name" required>
+
+      <label for="inputDate" class="sr-only">Date de l'événement</label>
+      <input type="date" id="inputDateE" class="form-control" placeholder="Date de l'événement" name ="dateE" required>
+
+      <label for="inputCapacity" class="sr-only">Nombre de participant</label>
+      <input type="number" id="inputCapacity" class="form-control" placeholder="Nombre de participant" name ="capacity" required>
+
+      <label for="inputDateI" class="sr-only">Date de fin d'inscription</label>
+      <input type="date" id="inputeDateI" class="form-control" placeholder="Date de fin d'inscription" name ="dateI" required>
+
+      <label for="inputDistance" class="sr-only">Distance </label>
+      <input type="number" id="inputDistance" class="form-control" placeholder="Distance en km" name ="dist" required>
+
+      <label for="inputImage" class="sr-only">Image événement </label>
+      <input type="file" id="inputImage" class="custom-file" placeholder="Image de l'événement" name ="imgE" required>
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Créer</button>
   </form>
-</body>
-  </html>
+  </body>
+    </html>

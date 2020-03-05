@@ -9,23 +9,38 @@ var express = require('express');
 var router = express.Router();
 let event = require('../models/event.js')
 let user = require('../models/user.js')
+let isConnected = require('../middleware/isConnected')
+let isAdmin = require('../middleware/isAdmin')
+let url = require ('url')
+let uri = require ('uri-js')
 
-router.get('/createEvent', function(req, res) {
-  //vérifier si il est bien connecter en récupérant l'adresse mail dans le cookie
-  user.isAdmin('louis.soleil@etu.umontpellier.fr' , function(result){
-    if (result[0].isAdmin === 1){ //on vérifie si l'utilisateur connecté est bien un admin
-      event.getType(function(types){
-        res.render('createEvent', {types: types})
-      });
-    }
-    else { //s'il ne l'est pas on le renvoie à la page d'accueil
-      //mettre le cas d'erreur dans un cookie
-      res.redirect('/');
-    }
+
+router.get('/', isConnected, function(req, res) {
+  id = req.baseUrl
+  console.log(id);
+  event.getAll(function(events){
+    //vérifier si l'utilisateur est bien connecté avec les cookies
+    res.render('events', {events: events})
   });
 });
 
-router.post('/createEvent', function(req, res, next) {
+router.get('/summaryEvent/:id',isConnected, function(req, res){
+  let id = req.originalUrl.split('/')[3]
+  event.getEvent(id, function(event){
+    console.log(event);
+    res.render('summaryEvent', {event: event})
+  });
+});
+
+router.get('/createEvent',isConnected, isAdmin, function(req, res) {
+      event.getType(function(types){
+        id = req.baseUrl
+        console.log(id);
+        res.render('createEvent', {types: types})
+      });
+  });
+
+router.post('/createEvent', function(req, res) {
   //on vérifie si tous les inputs sont bien remplis, même s'il y a un require dans la view
   if (req.body.name === undefined || req.body.name === "") {
     //mettre le cas d'erreur dans un cookie "oublie du nom de l'événement"
@@ -49,9 +64,9 @@ router.post('/createEvent', function(req, res, next) {
   else {
     let dist;
     dist == req.body.dist;
-    event.createEvent(req.body.type, req.body.name, req.body.capacity, req.body.dateE, req.body.dateI, dist, req.body.team, 0, function(){
+    event.createEvent(req.body.type, req.body.name, req.body.capacity, req.body.dateE, req.body.dateI, dist, req.body.team, 0, req.body.imgE, function(){
       //mettre dans le cookie que l'événement a bien été crééer
-      res.redirect('index');
+      res.redirect('/events');
     });
   }
 });
