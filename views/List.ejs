@@ -1,0 +1,25 @@
+<%- include('head/headerA') %>
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">Email</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Prénom</th>
+      <th scope="col">Département</th>
+      <th scope="col">Date de Naissance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for (member of members) { %>
+      <tr>
+        <th scope="row"><%=member.email %></th>
+        <td><%=member.nom %></td>
+        <td><%=member.prenom %></td>
+        <td><%=member.idDep %></td>
+        <td><%=member.dateNaissance %></td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+<a href="/admin/events" class="btn btn-lg btn-secondary">Retour</a>

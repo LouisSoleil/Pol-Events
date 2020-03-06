@@ -3,7 +3,12 @@
   <head>
     <title>Pol'Events</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -14,7 +19,7 @@
         user-select: none;
       }
 
-      @media (min-width: 768px) {
+      @media (min-width: 950px) {
         .bd-placeholder-img-lg {
           font-size: 3.5rem;
         }
@@ -23,14 +28,30 @@
 
   </head>
   <body class="text-center">
-    <div class="container">
-      <a href="/">Accueil</a>
-      <a href="/events">Les événements</a>
-      <a href="/resa">Mes réservations</a>
-      <a href="/users/logout">Se déconnecter</a>
-      <% if (locals.isAdmin == 1) { %>
-        <a href="/admin">Mode Admin</a>
-      <% } %>
-      <a href="/users/profil">Mon profil</a>
-
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Pol'Events</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/events">Les événements <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/resa">Mes réservations</a>
+          </li>
+          <li class="nav-item">
+            <% if (locals.isAdmin == 1) { %>
+              <a class="nav-link" href="/admin">Mode Admin</a>
+            <% } %>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/users/profil">Mon profil</a>
+          </li>
+        </ul>
+        <span class="nav-item">
+          <a class="nav-link" href="/users/logout">Se déconnecter</a>
+        </span>
+      </div>
+    </nav>

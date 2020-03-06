@@ -30,8 +30,15 @@ class Resa {
     });
   };
 
-  static deleteResa(id, cb) {
-    connect.query('DELETE FROM inscrire WHERE idEvent = ?', [id], function(err, result){
+  static deleteResa(id, mail, cb) {
+    connect.query('DELETE FROM inscrire WHERE idEvent = ? AND email = ?', [id, mail], function(err, result){
+      if (err) throw err
+      cb(result)
+    });
+  };
+
+  static deleteAllResa(id, cb) {
+    connect.query('DELETE FROM inscrire WHERE idEvent = ? ', [id], function(err, result){
       if (err) throw err
       cb(result)
     });

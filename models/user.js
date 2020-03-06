@@ -29,8 +29,8 @@ class User {
     });
   }
 
-  static modifyProfil(mail, lastname, firstname, birth, psw, cb){
-    connect.query("UPDATE personne SET mdp = ?, nom = ?, prenom = ?, dateNaissance = ? WHERE email = ?", [psw, lastname, firstname, birth, mail], function(err, result){
+  static modifyProfil(mail, lastname, firstname, birth, psw, dep, cb){
+    connect.query("UPDATE personne SET mdp = ?, nom = ?, prenom = ?, dateNaissance = ?, idDep = ? WHERE email = ?", [psw, lastname, firstname, birth, dep, mail], function(err, result){
       if (err) throw err
       cb(result)
     });

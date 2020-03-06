@@ -1,6 +1,7 @@
 <%- include('head/headerA') %>
 
-  <h1 class="h3 mb-3 font-weight-normal">Evénement disponible :</h1>
+  <h1 class="h3 mb-3 font-weight-normal">Evénements déjà créées :</h1>
+  <a href="/admin/events/createEvent" class="btn btn-primary">Ajouter un événement</a>
   <div class="row">
     <% for (event of events) {%>
       <div class="col-sm-4">

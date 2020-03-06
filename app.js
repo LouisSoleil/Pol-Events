@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var helmet = require('helmet')
+var helmet = require('helmet');
 
 //appel routeur
 var indexRouter = require('./routes/index');

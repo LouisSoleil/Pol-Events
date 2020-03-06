@@ -119,9 +119,9 @@ else {
 
     if (result[0] === undefined) { //vérifie si l'adresse mail est déjà associée à un compte
       var hashed = passwordHash.generate(req.body.mdp);
-      let date = moment(req.body.birth)
-      date = date.format('l');
-      user.register(req.body.mail, hashed, req.body.lastname, req.body.firstname, req.body.birth, req.body.departmt, function(){
+      let date = moment(req.body.birth).format('l');
+      console.log(date);
+      user.register(req.body.mail, hashed, req.body.lastname, req.body.firstname, date, req.body.departmt, function(){
           //success "il est bien inscrit"
           console.log("connecté");
           res.status(201);
@@ -143,27 +143,35 @@ router.get('/profil',isConnected, function(req, res){
   var token_decoded = jwt.verify(cookie, JWT_SIGN_SECRET)
   let userId = token_decoded.userId;
   user.findOne(userId, function(rows){
-    res.render('profil', {rows: rows})
+    user.getDep(function(deps){
+      rows[0].dateNaissance = moment(rows[0].dateNaissance).format('YYYY[-]MM[-]DD');
+      console.log("bd : " + rows[0].dateNaissance);
+      res.render('profil', {rows: rows, deps: deps})
+    });
   });
 });
 
 router.post('/profil', isConnected, function(req, res) {
   user.findOne(req.user.userId, function(result) {
-    if (req.body.oldPsw === ''){
-      let psw = result[0].mdp
-      console.log(psw);
-      user.modifyProfil(result[0].email, req.body.lastname, req.body.firstname, req.body.birth, psw, function(){
-      });
-      res.redirect('/');
+    if (req.body.departmt === undefined){
+      var dep = result[0].idDep
     }
     else {
-      console.log("hash ? " + passwordHash.verify(req.body.oldPsw, result[0].mdp));
+      var dep = req.body.departmt
+    }
+    if (req.body.oldPsw === ''){
+      let date = moment(req.body.birth).format('YYYY[-]MM[-]DD');
+      user.modifyProfil(result[0].email, req.body.lastname, req.body.firstname, date, result[0].mdp, dep, function(){
+        res.redirect('profil');
+      });
+    }
+    else {
       if (passwordHash.verify(req.body.oldPsw, result[0].mdp)) {
         if (req.body.newPsw1 == req.body.newPsw2) {
           var psw = passwordHash.generate(req.body.newPsw1);
-          res.clearCookie("jwt")
-          user.modifyProfil(result[0].email, req.body.lastname, req.body.firstname, req.body.birth, psw, function(){
-            res.redirect('/')
+          let date = moment(req.body.birth).format('YYYY[-]MM[-]DD');
+          user.modifyProfil(result[0].email, req.body.lastname, req.body.firstname, date, psw, dep, function(){
+            res.redirect('profil')
           });
         }
         else {
