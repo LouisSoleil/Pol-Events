@@ -7,68 +7,59 @@ dans le cookie je mets un entier qui correspond à mon cas d'erreur
 
 var express = require('express');
 var router = express.Router();
-let event = require('../models/event.js')
+let evenement = require('../models/event.js')
 let user = require('../models/user.js')
+let resa = require('../models/resa.js')
 let isConnected = require('../middleware/isConnected')
 let isAdmin = require('../middleware/isAdmin')
-let url = require ('url')
+let isReserved = require('../middleware/isReserved')
 let uri = require ('uri-js')
 
 
 router.get('/', isConnected, function(req, res) {
-  id = req.baseUrl
-  console.log(id);
-  event.getAll(function(events){
+  evenement.getAllU(function(events){
     //vérifier si l'utilisateur est bien connecté avec les cookies
     res.render('events', {events: events})
   });
 });
 
-router.get('/summaryEvent/:id',isConnected, function(req, res){
+router.get('/summaryEvent/:id',isConnected, isReserved, function(req, res){
   let id = req.originalUrl.split('/')[3]
-  event.getEvent(id, function(event){
-    console.log(event);
+  evenement.getEvent(id, function(event){
     res.render('summaryEvent', {event: event})
   });
 });
 
-router.get('/createEvent',isConnected, isAdmin, function(req, res) {
-      event.getType(function(types){
-        id = req.baseUrl
-        console.log(id);
-        res.render('createEvent', {types: types})
+router.get('/summaryEvent/:id/reserve', isConnected, function(req, res){
+  let id = req.originalUrl.split('/')[3];
+  var mail = req.user.userId;
+  evenement.getEvent(id, function(event){
+    if (event[0].nbMaxParticipant > 0) {
+      var newCap = event[0].nbMaxParticipant - 1;
+      evenement.modifyNb(id, newCap, function(){
+        resa.addResa(id, mail ,function(){
+          console.log("ok");
+          res.redirect('/events/summaryEvent/'+id)
+        });
       });
+    }
+    else{
+      res.redirect('/events/summaryEvent/'+id)
+      console.log('évènement complet');
+    }
   });
+});
 
-router.post('/createEvent', function(req, res) {
-  //on vérifie si tous les inputs sont bien remplis, même s'il y a un require dans la view
-  if (req.body.name === undefined || req.body.name === "") {
-    //mettre le cas d'erreur dans un cookie "oublie du nom de l'événement"
-    res.redirect('CreateEvent');
-  }
-
-  else if (req.body.dateE === undefined || req.body.dateE === "") {
-    //mettre le cas d'erreur dans un cookie "oublie de la date de l'événement"
-    res.redirect('CreateEvent');
-   }
-
-  else if (req.body.capacity === undefined || req.body.capacity === "") {
-    //mettre le cas d'erreur dans un cookie "oublie du nombre max de participant"
-    res.redirect('CreateEvent');
-  }
-
-  else if (req.body.dateI === undefined || req.body.dateI === "") {
-    //mettre le cas d'erreur dans un cookie "oublie de la date de fin d'inscription"
-    res.redirect('CreateEvent');
-   }
-  else {
-    let dist;
-    dist == req.body.dist;
-    event.createEvent(req.body.type, req.body.name, req.body.capacity, req.body.dateE, req.body.dateI, dist, req.body.team, 0, req.body.imgE, function(){
-      //mettre dans le cookie que l'événement a bien été crééer
-      res.redirect('/events');
+router.get('/summaryEvent/:id/delete', isConnected, isReserved, function(req, res){
+  let id = req.originalUrl.split('/')[3];
+  evenement.getEvent(id, function(event){
+    var newCap = event[0].nbMaxParticipant + 1;
+    evenement.modifyNb(id, newCap, function(){
+      resa.deleteResa(id, function(){
+        res.redirect('/events/summaryEvent/'+id)
+      });
     });
-  }
+  });
 });
 
 module.exports = router;

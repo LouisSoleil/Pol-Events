@@ -3,13 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var jwt = require('jsonwebtoken');
-//var bcrypt = require('bcrypte')
+var helmet = require('helmet')
 
 //appel routeur
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var eventsRouter = require ('./routes/events')
+var eventsRouter = require ('./routes/events');
+var adminRouter = require ('./routes/admin');
+var resasRouter = require ('./routes/resas');
 
 var app = express();
 
@@ -20,6 +21,7 @@ app.set('view engine', 'ejs');
 //Middleware
 app.use(logger('dev'));
 app.use(express.json());
+app.use(helmet());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,6 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/events', eventsRouter);
+app.use('/admin', adminRouter);
+app.use('/resa', resasRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

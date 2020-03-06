@@ -10,9 +10,24 @@ class Event {
   };
 
   static getAll(cb) {
-    connect.query('SELECT * FROM evenement WHERE afficher = ?',[0], function(err, rows){
+    connect.query('SELECT * FROM evenement', function(err, rows){
       if (err) throw err
       cb(rows)
+    });
+  };
+
+  static getAllU(cb) {
+    connect.query('SELECT * FROM evenement WHERE afficher = ?',[1], function(err, rows){
+      if (err) throw err
+      cb(rows)
+    });
+  };
+
+
+  static deleteE(id, capacity, cb) {
+    connect.query("UPDATE evenement SET nbMaxParticipant = ? WHERE idEvent = ?", [capacity, id], function(err, result){
+      if (err) throw err
+      cb(result)
     });
   };
 
@@ -20,15 +35,29 @@ class Event {
     connect.query('SELECT * FROM evenement WHERE idEvent = ?', [idE], function(err, row){
       if (err) throw error
       cb(row)
-    })
-  }
+    });
+  };
 
-  static createEvent(type, name, capacity, dateE, dateI, dist, team, show, imgE, cb) {
-    connect.query("INSERT INTO evenement SET idTypeE = ?, libelleEvent = ? , nbMaxparticipant = ?, DateEvent = ?, dateFinInscr = ?, distance = ?, parEquipe = ?, afficher = ?, photo = ?", [type, name, capacity, dateE, dateI, dist, team, show, imgE], function(err, result){
+  static modifyNb(id, capacity, cb) {
+    connect.query("UPDATE evenement SET nbMaxParticipant = ? WHERE idEvent = ?", [capacity, id], function(err, result){
       if (err) throw err
       cb(result)
     });
-  }
+  };
+
+  static createEvent(type, name, capacity, dateE, dateI, show, imgE, cb) {
+    connect.query("INSERT INTO evenement SET idTypeE = ?, libelleEvent = ? , nbMaxparticipant = ?, dateEvent = ?, dateFinInscr = ?, afficher = ?, photo = ?", [type, name, capacity, dateE, dateI, show, imgE], function(err, result){
+      if (err) throw err
+      cb(result)
+    });
+  };
+
+  static modifyEvent(id, name, capacity, dateE, dateI, cb) {
+    connect.query("UPDATE evenement SET libelleEvent = ? , nbMaxparticipant = ?, dateEvent = ?, dateFinInscr = ? WHERE idEvent = ?", [name, capacity, dateE, dateI, id], function(err, result){
+      if (err) throw err
+      cb(result)
+    });
+  };
 
 }
 

@@ -1,22 +1,25 @@
-<%- include('header') %>
-<body>
-  <h1><%= event[0].libelleEvent %> :</h1>
-  <table>
-    <tr>
-      <td><p><%= event[0].nbMaxParticipant %></p></td>
-    </tr>
-    <tr>
-      <td><p><%= event[0].dateEvent %></p></td>
-    </tr>
-    <tr>
-      <td><p><%= event[0].dateFinInscr %></p></td>
-    </tr>
-    <tr>
-      <td><p><%= event[0].photo %></p></td>
-    </tr>
-    <tr>
-      <td><p><%= event[0].photo %></p></td>
-    </tr>
-  </table>
+<%- include('head/header') %>
+
+  <div class="card" style="width: 18rem;">
+    <img src="/images/<%= event[0].photo %>" class="card-img-top" >
+    <div class="card-body">
+      <h5 class="card-title"><%= event[0].libelleEvent %> :</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Date de l'événement : <%= event[0].dateEvent %></li>
+      <li class="list-group-item">Nombre de place : <%= event[0].nbMaxParticipant %></li>
+      <li class="list-group-item">Date de fin d'inscription : <%= event[0].dateFinInscr %></li>
+    </ul>
+    <div class="card-body">
+    <% if (locals.isReserved == 0) { %>
+          <a href="/events/summaryEvent/<%= event[0].idEvent %>/reserve" class="btn btn-primary">S'inscrire</a>
+    <% }
+    else { %>
+          <a href="/events/summaryEvent/<%= event[0].idEvent %>/delete" class="btn btn-danger">Supprimer</a>
+    <% } %>
+    <a href="/events" class="btn btn-secondary">Retour</a>
+    </div>
+  </div>
+
 </body>
 </html>

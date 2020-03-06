@@ -29,8 +29,8 @@ class User {
     });
   }
 
-  static isAdmin(mail, cb){
-    connect.query('SELECT isAdmin FROM personne WHERE email = ?', [mail], function(err, result){
+  static modifyProfil(mail, lastname, firstname, birth, psw, cb){
+    connect.query("UPDATE personne SET mdp = ?, nom = ?, prenom = ?, dateNaissance = ? WHERE email = ?", [psw, lastname, firstname, birth, mail], function(err, result){
       if (err) throw err
       cb(result)
     });

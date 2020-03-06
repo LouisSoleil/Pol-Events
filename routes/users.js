@@ -16,22 +16,19 @@ const NAME_REGEX = /^[a-z]+-?[a-z]+\.[a-z]+-?[a-z]+@umontpellier\.fr$/
 var algo = 'aes256'
 var password = 'almfinz'
 
-router.get('/', function(req, res) {
-  res.render('connexion');
+router.get('/', function(req, res){
+  res.render('connexion')
 });
-
 
 router.post('/', function(req, res) {
   if (req.body.mail === undefined || req.body.mail === "") {
     //"vous devez rentrer un email"
      res.status(401).redirect('users');
-     console.log(1);
   }
 
   else if (req.body.mdp === undefined || req.body.mdp === "") {
     //vous devez rentrer un mdp
       res.status(401).redirect('users');
-      console.log(1);
    }
 
    else {
@@ -40,14 +37,14 @@ router.post('/', function(req, res) {
          if (!passwordHash.verify(req.body.mdp, result[0].mdp)){
               //erreur le mot de passe n'est pas bon
              res.status(404).redirect('users')
-             console.log("mdp pas bon");
+             res.locals.msg = "mauvais mot de passe";
            }
 
            else {
              //success il est bien connecté
              var token = jwtUtils.generateTokenForUser(result[0]);
              res.cookie("jwt", token, { expires: new Date(Date.now() + 2 * 3600000), httpOnly: true }); //2 heures
-             console.log("cookie ok");
+             console.log(res.locals.msg);
              res.status(201).redirect('/')
              }
        }
@@ -64,15 +61,6 @@ router.post('/', function(req, res) {
 router.get('/register', function(req, res) {
   user.getDep(function(deps){
     res.render('register', {deps: deps})
-  });
-});
-
-router.get('/profil',isConnected, function(req, res){
-  const cookie = req.cookies['jwt'];
-  var token_decoded = jwt.verify(cookie, JWT_SIGN_SECRET)
-  let userId = token_decoded.userId;
-  user.findOne(userId, function(rows){
-    res.render('profil', {rows: rows})
   });
 });
 
@@ -133,7 +121,6 @@ else {
       var hashed = passwordHash.generate(req.body.mdp);
       let date = moment(req.body.birth)
       date = date.format('l');
-      console.log(date);
       user.register(req.body.mail, hashed, req.body.lastname, req.body.firstname, req.body.birth, req.body.departmt, function(){
           //success "il est bien inscrit"
           console.log("connecté");
@@ -150,6 +137,48 @@ else {
    });
  }
 });
+
+router.get('/profil',isConnected, function(req, res){
+  const cookie = req.cookies['jwt'];
+  var token_decoded = jwt.verify(cookie, JWT_SIGN_SECRET)
+  let userId = token_decoded.userId;
+  user.findOne(userId, function(rows){
+    res.render('profil', {rows: rows})
+  });
+});
+
+router.post('/profil', isConnected, function(req, res) {
+  user.findOne(req.user.userId, function(result) {
+    if (req.body.oldPsw === ''){
+      let psw = result[0].mdp
+      console.log(psw);
+      user.modifyProfil(result[0].email, req.body.lastname, req.body.firstname, req.body.birth, psw, function(){
+      });
+      res.redirect('/');
+    }
+    else {
+      console.log("hash ? " + passwordHash.verify(req.body.oldPsw, result[0].mdp));
+      if (passwordHash.verify(req.body.oldPsw, result[0].mdp)) {
+        if (req.body.newPsw1 == req.body.newPsw2) {
+          var psw = passwordHash.generate(req.body.newPsw1);
+          res.clearCookie("jwt")
+          user.modifyProfil(result[0].email, req.body.lastname, req.body.firstname, req.body.birth, psw, function(){
+            res.redirect('/')
+          });
+        }
+        else {
+          res.redirect('profil')
+          console.log("les deux mdp ne correspondent pas");
+        }
+      }
+      else {
+        res.redirect('profil')
+        console.log("l'ancien mot de passe n'est pas bon");
+      }
+    }
+  });
+});
+
 
 router.get("/logout", isConnected, function(req, res){
   res.clearCookie("jwt")

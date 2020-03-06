@@ -1,0 +1,40 @@
+<%- include('head/headerA') %>
+
+<form class="form-signin" method="POST", action="/admin/events/summaryEventAdmin/<%= event[0].idEvent %>">
+    <h1 class="h3 mb-3 font-weight-normal">Modifier <%= event[0].libelleEvent %> :</h1>
+
+    <div class="form-group row">
+      <label for="inputName" class="col-sm-4 col-form-label">Nom : </label>
+      <div class="col-sm-8">
+        <input type="text" id="inputName" class="form-control" value="<%= event[0].libelleEvent %>" name = "name" >
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="inputDate" class="col-sm-4 col-form-label"> Date événement :</label>
+      <div class="col-sm-8">
+        <input type="date" id="inputDateE" class="form-control" value="<%= event[0].DateEvent %>" name ="dateE" >
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="inputCapacity" class="col-sm-4 col-form-label">Nombre de place :</label>
+      <div class="col-sm-8">
+        <input type="number" id="inputCapacity" class="form-control" value="<%= event[0].nbMaxParticipant %>" name ="capacity" >
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="inputDateI" class="col-sm-4 col-form-label">Date fin inscription :</label>
+      <div class="col-sm-8">
+        <input type="date" id="inputeDateI" class="form-control" value="<%= event[0].dateFinInscr %>" name ="dateI" >
+      </div>
+    </div>
+
+
+    <button class="btn btn-lg btn-primary" type="submit">Modifier</button>
+    <a href="/admin/events" class="btn btn-lg btn-secondary">Retour</a>
+</form>
+
+</body>
+</html>

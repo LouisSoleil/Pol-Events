@@ -1,11 +1,6 @@
-<%- include('head/header') %>
-  <% if (locals.isResa == 1) { %>
-    <h1 class="h3 mb-3 font-weight-normal">Vos réservations :</h1>
-  <% }
-  else { %>
-    <h1 class="h3 mb-3 font-weight-normal">Evénement disponible :</h1>
-  <% } %>
+<%- include('head/headerA') %>
 
+  <h1 class="h3 mb-3 font-weight-normal">Evénement disponible :</h1>
   <div class="row">
     <% for (event of events) {%>
       <div class="col-sm-4">
@@ -13,7 +8,8 @@
           <img src="/images/<%= event.photo %>" class="card-img-top">
           <div class="card-body">
             <h5 class="card-title"><%= event.libelleEvent %></h5>
-            <a href="/events/summaryEvent/<%= event.idEvent %>" class="btn btn-primary">Accéder</a>
+            <a href="/admin/events/summaryEventAdmin/<%= event.idEvent %>" class="btn btn-primary">Modifier</a>
+            <a href="/admin/events/delete/<%= event.idEvent %>" class="btn btn-danger">Supprimer</a>
           </div>
         </div>
       </div>
