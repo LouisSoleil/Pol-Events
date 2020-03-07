@@ -9,12 +9,21 @@ class User {
       cb(result)
     });
   }
+
+  static getAll(cb){
+    connect.query("SELECT * FROM personne ORDER BY nom", function(err, rows){
+      if (err) throw err
+      cb(rows)
+    });
+  }
+
   static signin(mail, mdp, cb){
     connect.query("SELECT * FROM personne WHERE email = ? AND mdp = ?", [mail, mdp], function(err, rows){
       if (err) throw err
       cb(rows)
     });
   }
+
   static findOne(mail, cb){
     connect.query("SELECT * FROM personne WHERE email = ? ", [mail], function(err, result){
       if (err) throw err
@@ -31,6 +40,13 @@ class User {
 
   static modifyProfil(mail, lastname, firstname, birth, psw, dep, cb){
     connect.query("UPDATE personne SET mdp = ?, nom = ?, prenom = ?, dateNaissance = ?, idDep = ? WHERE email = ?", [psw, lastname, firstname, birth, dep, mail], function(err, result){
+      if (err) throw err
+      cb(result)
+    });
+  }
+
+  static updateAdmin(mail, etat, cb){
+    connect.query("UPDATE personne SET isAdmin = ? WHERE email = ?", [etat, mail], function(err, result){
       if (err) throw err
       cb(result)
     });

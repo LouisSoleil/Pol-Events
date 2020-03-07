@@ -1,0 +1,10 @@
+<script>
+    $(document).ready(function(){
+        $("#search_box").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#list_produits tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>

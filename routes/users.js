@@ -12,7 +12,6 @@ const JWT_SIGN_SECRET = '19ljbiPiàji097gytr'
 
 const EMAIL_REGEXE = /^[a-z]+-?[a-z]+\.[a-z]+-?[a-z]+@etu\.umontpellier\.fr$/
 const EMAIL_REGEXP = /^[a-z]+-?[a-z]+\.[a-z]+-?[a-z]+@umontpellier\.fr$/
-const NAME_REGEX = /^[a-z]+-?[a-z]+\.[a-z]+-?[a-z]+@umontpellier\.fr$/
 var algo = 'aes256'
 var password = 'almfinz'
 

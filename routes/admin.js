@@ -3,6 +3,7 @@ var router = express.Router();
 let isConnected = require('../middleware/isConnected');
 let isAdmin = require('../middleware/isAdmin');
 let evenement = require('../models/event.js');
+let user = require('../models/user.js');
 let resa = require('../models/resa.js');
 let moment = require('moment-fr');
 var pdfMake = require('pdfmake/build/pdfmake.js');
@@ -20,9 +21,43 @@ router.get('/events', isConnected, isAdmin, function(req, res) {
   });
 });
 
+router.get('/search', isConnected, isAdmin, function(req, res) {
+  res.locals.isPeople = 1;
+  user.getAll(function(members){
+    for (member of members){
+      member.dateNaissance = moment(member.dateNaissance).format('L');
+    }
+    res.render('List', {members: members})
+  });
+});
+
+router.post('/search', isConnected, isAdmin, function(req, res) {
+  res.locals.isPeople = 1;
+  user.findOne(req.body.search, function(members){
+    for (member of members){
+      member.dateNaissance = moment(member.dateNaissance).format('L');
+    }
+    res.render('List', {members: members})
+  });
+});
+
+router.get('/search/profilAdmin/:mail', isConnected, isAdmin, function(req, res) {
+  let mail = req.originalUrl.split('/')[4]
+  user.findOne(mail, function(member){
+    member[0].dateNaissance = moment(member[0].dateNaissance).format('L');
+    res.render('profilAdmin', {member: member})
+  });
+});
+
+router.post('/search/profilAdmin/:mail', isConnected, isAdmin, function(req, res) {
+  let mail = req.originalUrl.split('/')[4]
+  user.updateAdmin(mail, req.body.etat, function(){
+    res.redirect('/admin/search/profilAdmin/'+mail)
+  });
+});
+
 router.get('/events/summaryEventAdmin/:id',isConnected, isAdmin, function(req, res){
   let id = req.originalUrl.split('/')[4]
-  console.log(req.originalUrl);
   evenement.getEvent(id, function(event){
     event[0].dateEvent = moment(event[0].dateEvent).format('YYYY[-]MM[-]DD')
     event[0].dateFinInscr = moment(event[0].dateFinInscr).format('YYYY[-]MM[-]DD')
@@ -30,14 +65,30 @@ router.get('/events/summaryEventAdmin/:id',isConnected, isAdmin, function(req, r
   });
 });
 
+
 router.get('/events/summaryEventAdmin/:id/members',isConnected, isAdmin, function(req, res){
   let id = req.originalUrl.split('/')[4]
-  var i = 0;
   evenement.getParticEvent(id, function(members){
-    for (member of members){
-      member.dateNaissance = moment(member.dateNaissance).format('L');
-    }
-    res.render('List', {members: members});
+    evenement.getEvent(id, function(event){
+      for (member of members){
+        member.dateNaissance = moment(member.dateNaissance).format('L');
+      }
+      res.render('List', {members: members, event: event});
+    });
+  });
+});
+
+router.get('/events/summaryEvent/:id/:mail/deleteOneUser', isConnected, isAdmin, function(req, res){
+  console.log(req.originalUrl.split('/'));
+  let id = req.originalUrl.split('/')[4];
+  let mail = req.originalUrl.split('/')[5];
+  evenement.getEvent(id, function(event){
+    var newCap = event[0].nbMaxParticipant + 1;
+    evenement.modifyNb(id, newCap, function(){
+      resa.deleteResa(id, mail, function(){
+        res.redirect('/admin/events/summaryEventAdmin/'+id+'/members')
+      });
+    });
   });
 });
 

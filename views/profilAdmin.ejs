@@ -1,0 +1,39 @@
+<%- include('head/headerA') %>
+
+  <div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title"><%= member[0].nom %> <%= member[0].prenom %> :</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Email : <%= member[0].email %></li>
+      <li class="list-group-item">Date de naissance : <%= member[0].dateNaissance %></li>
+      <li class="list-group-item">Département : <%= member[0].idDep %></li>
+    </ul>
+    <div class="card-body">
+      <form class="" action="/admin/search/profilAdmin/<%= member[0].email %>" method="post">
+        <li class="list-group-item">
+          <select class="custom-select" id="etat" name="etat">
+            <% if (member[0].isAdmin == 0) {%>
+              <option value="<%= member[0].isAdmin %>" disabled selected> Normal </option>
+            <% }
+            else if (member[0].isAdmin == 1) {%>
+              <option value="<%= member[0].isAdmin %>" disabled selected> Admin </option>
+            <% }
+            else { %>
+              <option value="<%= member[0].isAdmin %>" disabled selected> Super Admin </option>
+              <% } %>
+              <option value="0"> Normal </option>
+              <option value="1"> Admin </option>
+              <option value="2"> Super Admin </option>
+            </select>
+          </li>
+          <% if (locals.isSuperAdmin == 1) {%>
+            <button class="btn btn-primary" type="submit">Modifier</button>
+          <%}%>
+      </form>
+    </div>
+    <a href="/admin/search" class="btn btn-secondary">Retour</a>
+  </div>
+
+</body>
+</html>

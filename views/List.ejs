@@ -1,5 +1,24 @@
 <%- include('head/headerA') %>
 
+<% if (locals.isPeople == 1) { %>
+  <h1> Tous les utilisateurs </h1>
+    <form class="form-signin" method="POST", action="/admin/search">
+      <div class="form-group row">
+        <label for="inputSearch" class="col-sm-3 col-form-label"> Rechercher :</label>
+        <div class="col-sm-6">
+          <input type="email" id="inputSearch" class="form-control" placeholder="Adresse Mail" name ="search" >
+        </div>
+        <div class="col-sm-3">
+          <button class="btn btn-primary" type="submit">Rechercher</button>
+        </div>
+      </div>
+    </form>
+<% } else {%>
+  <h1>Participants à <%= event[0].libelleEvent %></h1>
+<%}%>
+
+
+
 <table class="table table-sm">
   <thead>
     <tr>
@@ -7,7 +26,12 @@
       <th scope="col">Nom</th>
       <th scope="col">Prénom</th>
       <th scope="col">Département</th>
-      <th scope="col">Date de Naissance</th>
+      <% if (locals.isPeople == 1) { %>
+        <th scope="col"> Administrateur </th>
+      <% }
+      else { %>
+        <th scope="col">Date de Naissance</th>
+      <% } %>
     </tr>
   </thead>
   <tbody>
@@ -17,9 +41,23 @@
         <td><%=member.nom %></td>
         <td><%=member.prenom %></td>
         <td><%=member.idDep %></td>
-        <td><%=member.dateNaissance %></td>
+        <% if (locals.isPeople == 1) { %>
+          <td> <%=member.isAdmin %> <td>
+          <a href="/admin/search/profilAdmin/<%=member.email %>" class="btn btn-outline-primary">Accéder au profil</a>
+        <% }
+        else { %>
+          <td><%=member.dateNaissance %></td>
+          <% if (isSuperAdmin == 1) {%>
+            <td><a href="/admin/events/summaryEvent/<%= event[0].idEvent %>/<%= member.email %>/deleteOneUser" class="btn btn-outline-danger">Supprimer la réservation</a></td>
+          <% } %>
+        <%}%>
       </tr>
     <% } %>
   </tbody>
 </table>
-<a href="/admin/events" class="btn btn-lg btn-secondary">Retour</a>
+<% if (locals.isPeople == 1) { %>
+  <a href="/admin" class="btn btn-lg btn-secondary">Retour</a>
+<% }
+else { %>
+  <a href="/admin/events/summaryEventAdmin/<%= event[0].idEvent %>" class="btn btn-lg btn-secondary">Retour</a>
+<% }%>
