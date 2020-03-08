@@ -16,7 +16,7 @@ const EMAIL_REGEXP = /^[a-z]+-?[a-z]+\.[a-z]+-?[a-z]+@umontpellier\.fr$/
 var algo = 'aes256'
 var password = 'almfinz'
 
-router.get('/', function(req, res){
+router.get('/', getMsg, function(req, res){
   res.render('connexion')
 });
 
@@ -35,14 +35,13 @@ router.post('/', function(req, res) {
      user.findOne(req.body.mail, function (result){
        if (result[0] != undefined){
          if (!passwordHash.verify(req.body.mdp, result[0].mdp)){
-              res.cookie('Success', "Le mot de passe n'est pas bon.", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
-             res.status(404).redirect('users')
+           res.cookie('Success', "Le mot de passe n'est pas bon.", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
+            res.status(404).redirect('users')
            }
 
            else {
              var token = jwtUtils.generateTokenForUser(result[0]);
              res.cookie("jwt", token, { expires: new Date(Date.now() + 2 * 3600000), httpOnly: true }); //2 heures
-             console.log(res.locals.msg);
              res.status(201).redirect('/')
              }
        }
@@ -55,7 +54,7 @@ router.post('/', function(req, res) {
    }
 });
 
-router.get('/register', function(req, res) {
+router.get('/register', getMsg, function(req, res) {
   user.getDep(function(deps){
     res.render('register', {deps: deps})
   });
@@ -109,10 +108,8 @@ else {
     if (result[0] === undefined) { //vérifie si l'adresse mail est déjà associée à un compte
       var hashed = passwordHash.generate(req.body.mdp);
       let date = moment(req.body.birth).format('YYYY[-]MM[-]DD');
-      console.log(date);
       user.register(req.body.mail, hashed, req.body.lastname, req.body.firstname, date, req.body.departmt, function(){
           res.cookie('Success', "Vous êtes bien inscrit", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
-          console.log("connecté");
           res.status(201);
           res.redirect('/');
       });
@@ -133,7 +130,6 @@ router.get('/profil',isConnected, getMsg, function(req, res){
   user.findOne(userId, function(rows){
     user.getDep(function(deps){
       rows[0].dateNaissance = moment(rows[0].dateNaissance).format('YYYY[-]MM[-]DD');
-      console.log("bd : " + rows[0].dateNaissance);
       res.render('profil', {rows: rows, deps: deps})
     });
   });

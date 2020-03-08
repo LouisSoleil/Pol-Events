@@ -36,7 +36,6 @@ router.get('/summaryEvent/:id/reserve', isConnected, getMsg, function(req, res){
         var newCap = event[0].nbMaxParticipant - 1;
         evenement.modifyNb(id, newCap, function(){
           resa.addResa(id, mail ,function(){
-            console.log("ok");
             res.redirect('/events/summaryEvent/'+id)
           });
         });

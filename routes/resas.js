@@ -10,7 +10,6 @@ let isAdmin = require('../middleware/isAdmin')
 router.get('/', isConnected, isResa, getMsg, function(req, res) {
   let mail = req.user.userId;
   resa.getResaEvent(mail, function(events){
-    console.log(events);
     res.render('events', {events: events})
   });
 });

@@ -32,7 +32,7 @@ class User {
   }
 
   static getDep(cb){
-    connect.query('SELECT idDep FROM departement', function(err, rows){
+    connect.query('SELECT idDep FROM departement ORDER BY idDep', function(err, rows){
       if (err) throw err
       cb(rows)
     });

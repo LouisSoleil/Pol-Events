@@ -71,30 +71,37 @@ router.post('/events/summaryEventAdmin/:id', isConnected, isAdmin, function(req,
   let id = req.originalUrl.split('/')[4]
   if (req.body.name === undefined || req.body.name === "") {
     res.cookie('Success', "Vous n'avez pas modifié le nom", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
-    console.log(1);
     res.redirect(req.originalUrl);
   }
 
   else if (req.body.dateE === undefined || req.body.dateE === "") {
-    res.cookie('Success', "Vous n'avez pas modifié la date de l'événement", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
-    console.log(2);
+    res.cookie('Success', "Vous n'avez pas modifié la date de l'événement", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true })
     res.redirect(req.originalUrl);
    }
 
   else if (req.body.capacity === undefined || req.body.capacity === "") {
     res.cookie('Success', "Vous n'avez pas modifié la capacité", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
-    console.log(3);
     res.redirect(req.originalUrl);
   }
 
   else if (req.body.dateI === undefined || req.body.dateI === "") {
     res.cookie('Success', "Vous n'avez pas modifié la date de fin d'inscription", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
-    console.log(4);
     res.redirect(req.originalUrl);
    }
 
+   else if (req.body.etat === undefined || req.body.etat === "") {
+    evenement.getEvent(id, function (event) {
+      etat = event[0].afficher
+      evenement.modifyEvent(id, req.body.name, req.body.capacity, req.body.dateE, req.body.dateI, etat, function(){
+        res.cookie('Success', "L'événement a bien été modifié", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
+        res.redirect('/admin/events');
+      });
+    })
+    }
+
   else {
-    evenement.modifyEvent(id, req.body.name, req.body.capacity, req.body.dateE, req.body.dateI, req.body.etat, function(){
+    etat = req.body.etat
+    evenement.modifyEvent(id, req.body.name, req.body.capacity, req.body.dateE, req.body.dateI, etat, function(){
       res.cookie('Success', "L'événement a bien été modifié", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
       res.redirect('/admin/events');
     });
