@@ -108,7 +108,7 @@ else {
 
     if (result[0] === undefined) { //vérifie si l'adresse mail est déjà associée à un compte
       var hashed = passwordHash.generate(req.body.mdp);
-      let date = moment(req.body.birth).format('l');
+      let date = moment(req.body.birth).format('YYYY[-]MM[-]DD');
       console.log(date);
       user.register(req.body.mail, hashed, req.body.lastname, req.body.firstname, date, req.body.departmt, function(){
           res.cookie('Success', "Vous êtes bien inscrit", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
