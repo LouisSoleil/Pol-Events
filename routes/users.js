@@ -67,7 +67,7 @@ router.post('/register', function(req, res) {
      res.redirect('register');
    }
    // on regarde si le mail est bien de la forme etu.umontpellier.fr ou umontpellier.fr
-   else if (!(EMAIL_REGEXE.test(req.body.mail))) {
+   else if ((!(EMAIL_REGEXE.test(req.body.mail))) && (!(EMAIL_REGEXP.test(req.body.mail)))) {
     res.cookie('Success', "Vous devez mettre votre adresse mail de polytech", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
     res.redirect('register');
    }
