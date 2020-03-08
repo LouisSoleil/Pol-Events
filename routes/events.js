@@ -1,30 +1,24 @@
-/*
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Quand je vais faire les cookies, il faut en crééer un pour mettre les messsages d'erreurs et quans je ferais un redirect je l'affiche
-dans le cookie je mets un entier qui correspond à mon cas d'erreur
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-*/
-
 var express = require('express');
 var router = express.Router();
 let evenement = require('../models/event.js')
 let user = require('../models/user.js')
 let resa = require('../models/resa.js')
 let isConnected = require('../middleware/isConnected')
+let getMsg = require('../middleware/getMsg')
 let isAdmin = require('../middleware/isAdmin')
 let isReserved = require('../middleware/isReserved')
 let uri = require ('uri-js')
 let moment = require ('moment-fr')
 
 
-router.get('/', isConnected, function(req, res) {
+router.get('/', isConnected, getMsg, function(req, res) {
   evenement.getAllU(function(events){
     //vérifier si l'utilisateur est bien connecté avec les cookies
     res.render('events', {events: events})
   });
 });
 
-router.get('/summaryEvent/:id',isConnected, isReserved, function(req, res){
+router.get('/summaryEvent/:id',isConnected, isReserved, getMsg, function(req, res){
   let id = req.originalUrl.split('/')[3]
   evenement.getEvent(id, function(event){
     event[0].dateEvent = moment(event[0].dateEvent).format('L')
@@ -33,7 +27,7 @@ router.get('/summaryEvent/:id',isConnected, isReserved, function(req, res){
   });
 });
 
-router.get('/summaryEvent/:id/reserve', isConnected, function(req, res){
+router.get('/summaryEvent/:id/reserve', isConnected, getMsg, function(req, res){
   let id = req.originalUrl.split('/')[3];
   var mail = req.user.userId;
   evenement.getEvent(id, function(event){
@@ -48,18 +42,18 @@ router.get('/summaryEvent/:id/reserve', isConnected, function(req, res){
         });
       }
       else{
+        res.cookie('Success', "L'événement est complet", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
         res.redirect('/events/summaryEvent/'+id)
-        console.log('évènement complet');
       }
     }
     else {
+      res.cookie('Success', "La date de fin d'inscription est dépassée", { expires: new Date(Date.now() + 2 * 1000), httpOnly: true });
       res.redirect('/events/summaryEvent/'+id)
-      console.log("Trop tard pour s'inscrire");
     }
     });
 });
 
-router.get('/summaryEvent/:id/deleteOne', isConnected, isReserved, function(req, res){
+router.get('/summaryEvent/:id/deleteOne', isConnected, isReserved, getMsg, function(req, res){
   let id = req.originalUrl.split('/')[3];
   mail = req.user.userId;
   evenement.getEvent(id, function(event){

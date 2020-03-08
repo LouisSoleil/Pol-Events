@@ -50,3 +50,8 @@
         </span>
       </div>
     </nav>
+    <% if (locals.getSuccess != 0) { %>
+      <div class="alert alert-primary" role="alert">
+        <%= locals.getSuccess %>
+      </div>
+    <% } %>
